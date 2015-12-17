@@ -40,6 +40,7 @@ func usage(w http.ResponseWriter) {
 
     ~$ curl lf.lc/fpW
         Hello world.
+
 `)
 }
 
@@ -48,6 +49,7 @@ func fail(w http.ResponseWriter, err string) {
 	io.WriteString(w, err)
 }
 
+var domain string
 var directory string
 var listeningPort string
 
@@ -69,7 +71,7 @@ func mux(w http.ResponseWriter, r *http.Request) {
 			filePath.WriteString(val[0])
 
 			info, _ := filePath.Stat()
-			fmt.Fprintf(w, "%s\n", ftoa(info.Name()))
+			fmt.Fprintf(w, "http://%s/%s\n", domain, ftoa(info.Name()))
 		} else {
 			fail(w, "Error: invalid request")
 			return
@@ -100,6 +102,7 @@ func Log(handler http.Handler) http.Handler {
 func main() {
 	flag.StringVar(&directory, "storage", "/srv/http/short", "storage directory")
 	flag.StringVar(&listeningPort, "port", ":9000", "listening port")
+	flag.StringVar(&domain, "domain", "lf.lc", "hosted domain")
 	flag.Parse()
 
 	http.HandleFunc("/", mux)
