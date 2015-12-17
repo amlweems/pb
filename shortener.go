@@ -49,6 +49,7 @@ func fail(w http.ResponseWriter, err string) {
 }
 
 var directory string
+var listeningPort string
 
 func mux(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
@@ -98,8 +99,12 @@ func Log(handler http.Handler) http.Handler {
 
 func main() {
 	flag.StringVar(&directory, "storage", "/srv/http/short", "storage directory")
+	flag.StringVar(&listeningPort, "port", ":9000", "listening port")
 	flag.Parse()
 
 	http.HandleFunc("/", mux)
-	http.ListenAndServe(":9000", Log(http.DefaultServeMux))
+	err := http.ListenAndServe(listeningPort, Log(http.DefaultServeMux))
+	if err != nil {
+		log.Fatal("Unable to bind to address: ", listeningPort)
+	}
 }
