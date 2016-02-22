@@ -7,9 +7,9 @@ A command line pastebin inspired by ix.io 😊
 Assume you have created a shortener on the domain `lf.lc`. Users can interact with your shortener as follows.
 
 ```
-~$ echo Hello world. | curl -F 'f:1=<-' lf.lc
-http://lf.lc/fpW
+~$ echo Hello world. | curl -F 'f:1=<-' https://lf.lc
+https://lf.lc/fpW
 
-~$ curl lf.lc/fpW
+~$ curl https://lf.lc/fpW
 Hello world.
 ```
