@@ -35,10 +35,10 @@ func usage(w http.ResponseWriter) {
 	io.WriteString(w, `
     command line pastebin.
 
-    ~$ echo Hello world. | curl -F 'f:1=<-' lf.lc
-    http://lf.lc/fpW
+    ~$ echo Hello world. | curl -F 'f:1=<-' https://s.lf.lc
+    https://s.lf.lc/fpW
 
-    ~$ curl lf.lc/fpW
+    ~$ curl https://lf.lc/fpW
         Hello world.
 
 `)
@@ -71,7 +71,10 @@ func mux(w http.ResponseWriter, r *http.Request) {
 			filePath.WriteString(val[0])
 
 			info, _ := filePath.Stat()
-			fmt.Fprintf(w, "http://%s/%s\n", domain, ftoa(info.Name()))
+			msg := fmt.Sprintf("https://%s/%s\n", domain, ftoa(info.Name()))
+
+			io.WriteString(w, msg)
+                        log.Printf("%s CREATE %s", r.RemoteAddr, msg)
 		} else {
 			fail(w, "Error: invalid request")
 			return
